@@ -1,5 +1,3 @@
-# Daily-Diet-API
-
 # 🍽️ Daily Diet API
 
 Este projeto é um **desafio prático** do módulo **Desenvolvimento Avançado com Flask**, onde desenvolvemos uma API para controle de dieta diária. A aplicação permite o registro, edição, exclusão e consulta de refeições, com foco em boas práticas de desenvolvimento e uso de tecnologias modernas.
