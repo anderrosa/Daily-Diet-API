@@ -20,6 +20,7 @@ login_manager.login_view = 'login'
 def load_user(user_id):
   return User.query.get(user_id)
 
+# Rota de login de usuário
 @app.route('/login', methods=["POST"])
 def login():
   data = request.json
@@ -37,12 +38,14 @@ def login():
   
   return jsonify({"message": "Credenciais inválidas"}), 400
 
+# Rota de logout de usuário
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
   logout_user()
   return jsonify({"message": "Logout realizado com sucesso!"})
-  
+
+# Rota de criação de usuários  
 @app.route('/user', methods=["POST"])
 def create_user():
   data = request.json
@@ -58,6 +61,7 @@ def create_user():
 
   return jsonify({"message": "Dados inválidos"}), 400
 
+# Rota para cadastro de refeições
 @app.route('/meals', methods=['POST'])
 @login_required
 def create_meal():
@@ -76,6 +80,26 @@ def create_meal():
    db.session.commit()
 
    return jsonify({"message": "Refeição cadastrada com sucesso!"})
+
+# Rota para editar refeição
+@app.route('/meals/<int:id>', methods=['PUT'])
+@login_required
+def uptade_meal(id):
+   meal = Meal.query.filter_by(id=id, user_id=current_user.id).first()
+
+   if not meal:
+      return jsonify({"message": "Refeição não encontrada!"}), 404
+   
+   data = request.json
+   meal.name = data.get("name", meal.name)
+   meal.description = data.get("description", meal.description)
+   meal.date_time = data.get("date_time", meal.date_time)
+   meal.in_diet = data.get("in_diet", meal.in_diet)
+
+   db.session.commit()
+
+   return jsonify({"message": "Refeição atualizada com sucesso!"})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
