@@ -58,5 +58,24 @@ def create_user():
 
   return jsonify({"message": "Dados inválidos"}), 400
 
+@app.route('/meals', methods=['POST'])
+@login_required
+def create_meal():
+   data = request.json
+   name = data.get("name")
+   description = data.get("description", "")
+   date_time = data.get("date_time")
+   in_diet = data.get("in_diet")
+
+   if not name or not date_time or in_diet is None:
+      return jsonify({"message": "Dados inválidos!"}), 400
+   
+   #criando uma nova refeição
+   meal = Meal(name=name, description=description, date_time=date_time, in_diet=in_diet, user_id=current_user.id)
+   db.session.add(meal)
+   db.session.commit()
+
+   return jsonify({"message": "Refeição cadastrada com sucesso!"})
+
 if __name__ == '__main__':
     app.run(debug=True)
