@@ -116,6 +116,25 @@ def list_meals():
 
    return jsonify(meals_list)
 
+# Rota para ver uma única refeição
+@app.route('/meals/<int:id>', methods=['GET'])
+@login_required
+def get_meal(id):
+    meal = Meal.query.filter_by(id=id, user_id=current_user.id).first()
+
+    if not meal:
+        return jsonify({"message": "Refeição não encontrada"}), 404
+
+    meal_data = {
+        "id": meal.id,
+        "name": meal.name,
+        "description": meal.description,
+        "date_time": meal.date_time,
+        "in_diet": meal.in_diet
+    }
+
+    return jsonify(meal_data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
