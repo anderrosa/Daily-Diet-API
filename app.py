@@ -100,6 +100,22 @@ def uptade_meal(id):
 
    return jsonify({"message": "Refeição atualizada com sucesso!"})
 
+# Rota para listar todas as refeições de um usuário
+@app.route('/meals', methods=['GET'])
+@login_required
+def list_meals():
+   meals = Meal.query.filter_by(user_id=current_user.id).all()
+
+   meals_list = [{
+      "id": meal.id,
+      "name": meal.name,
+      "description": meal.description,
+      "date_time": meal.date_time,
+      "in_diet": meal.in_diet
+   } for meal in meals]
+
+   return jsonify(meals_list)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
